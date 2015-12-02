@@ -1,0 +1,8 @@
+.mvn/
+mvnw*
+.idea/
+*.iml
+target/
+bin/
+src/main/resources/json/WO_98_Discovery_A.json
+src/main/resources/json/WO_98_Discovery_B.json
