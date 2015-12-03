@@ -10,38 +10,33 @@ package uk.gov.nationalarchives.ttt.discovery.config;
 
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.neo4j.config.Neo4jConfiguration;
-import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.server.Neo4jServer;
 import org.springframework.data.neo4j.server.RemoteServer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableNeo4jRepositories("uk.gov.nationalarchives.ttt.neo4j.dao.neo4j")
 @EnableTransactionManagement
 public class TTTNeo4jConfiguration extends Neo4jConfiguration {
 
-    public static final String HOST = "http://***REMOVED***:8990";
-    public static final String PORT = "7474";
-    public static final String USER = "neo4j";
-    public static final String PASSWORD = "ttt";
+    @Autowired
+    private Neo4jProperties neo4jProperties;
 
     @Bean
     public Neo4jServer neo4jServer() {
-        return new RemoteServer(HOST+":"+PORT, USER, PASSWORD);
+        return new RemoteServer(neo4jProperties.getHost()+":"+neo4jProperties.getPort(), neo4jProperties.getUser(),
+                neo4jProperties.getPassword());
     }
 
     @Bean
     public SessionFactory getSessionFactory() {
-        // with domain entity base package(s)
-        return new SessionFactory("uk.gov.nationalarchives.ttt.neo4j.domain.graphperson");
+        return new SessionFactory();
     }
 
-//    // needed for session in view in web-applications
     @Bean
-//    @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
     public Session getSession() throws Exception {
         return super.getSession();
     }
